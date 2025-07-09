@@ -1,11 +1,13 @@
 {
     "name": "co-func",
     "private": false,
-    "version": "0.0.4",
+    "version": "0.0.5",
     "type": "module",
     "main": "dist/co-func.cjs",
     "module": "dist/co-func.js",
-    "files": ["dist"],
+    "files": [
+        "dist"
+    ],
     "scripts": {
         "dev": "vite",
         "build": "tsc && vite build",
