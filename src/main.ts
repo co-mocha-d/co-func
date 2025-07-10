@@ -10,5 +10,9 @@ import time from './utils/time.ts';
 import digit from './utils/digit.ts';
 // uni工具
 import uniTool from './utils/uniTool.js';
+// 防抖
+import debounce from './utils/debounce.ts';
+// 节流
+import throttle from './utils/throttle.ts';
 
-export { test, map, format, time, digit, uniTool };
+export { test, map, format, time, digit, uniTool, debounce, throttle };
