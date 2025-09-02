@@ -235,10 +235,50 @@ export function save(img: string) {
     });
 }
 
+// 微信登录
+export function WxLogin(callback: Function) {
+    const url = window.location.href;
+    const urlParams = new URL(url);
+    const code = urlParams.searchParams.get('code');
+
+    let HW_MEMBER_IDS = uni.getStorageSync('HW_MEMBER_IDS');
+
+    if (HW_MEMBER_IDS) {
+        callback(HW_MEMBER_IDS);
+    } else if (code) {
+        uni.$API
+            .login({ code: code })
+            .then((res: any) => {
+                const resData = (res && res.data) || {};
+                const memberId = resData?.member_id;
+                const token = resData?.token;
+
+                if (memberId) {
+                    callback(memberId);
+                    uni.setStorageSync('HW_MEMBER_IDS', memberId);
+                    uni.setStorageSync('HW_TOKEN', token);
+                } else {
+                    uni.setStorageSync('HW_OPENID', resData.openid || '');
+                    callback('1'); // 需要绑定手机号
+                }
+            })
+            .catch((err: any) => {
+                console.error('登录失败:', err);
+                // 处理错误
+            });
+    } else {
+        const jumpUrl = encodeURIComponent(window.location.href);
+        const state = Math.random().toString(36).substring(2);
+        uni.setStorageSync('WECHAT_STATE', state);
+        window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx4dbe1521c110b976&redirect_uri=${jumpUrl}&response_type=code&scope=snsapi_userinfo&state=${state}#wechat_redirect`;
+    }
+}
+
 export default {
     isWechatBrowser,
     xcxCheckUpdate,
     saveImage,
     openWritePhotosSetting,
     save,
+    WxLogin,
 };
